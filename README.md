@@ -1,5 +1,5 @@
 # SmartVideoPhone_Server
-SmartVideoPhone for Women
+This Project's name is a SmartVideoPhone for Women
 
 The server recognizes the face using the Harr Cascade algorithm with OpenCV.
 
