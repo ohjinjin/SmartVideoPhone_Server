@@ -20,6 +20,8 @@ then the set of datas for training is created.
 
 ## train datas for training
 run **recognize.py** after run **train_datas.py** to training using these datas.
+> After executing train_datas.py, A Yaml file is created.
+
 We can see the face recoginition works well.
 
 ![ex_captureImage2](./test_ex1.jpg)
