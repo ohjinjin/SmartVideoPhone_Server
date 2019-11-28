@@ -24,3 +24,5 @@ We can see the face recoginition works well.
 ![ex_captureImage2](./test_ex1.jpg)
 
 More datas Better result.
+
+Using this, the whole project will identify whether the guest who visited my house is a stranger or a courier and notify to Android Application.
