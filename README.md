@@ -11,6 +11,7 @@ We can get 30 images for training like following image after executing **collect
 
 
 collect training datas by detecting only the face part while shooting like this :
+> Until this time, the server can only do face detection.
 
 
 ![ex_datafortrain](./1.2.jpg)
