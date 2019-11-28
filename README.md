@@ -22,3 +22,5 @@ run **recognize.py** after run **train_datas.py** to training using these datas.
 We can see the face recoginition works well.
 
 ![ex_captureImage2](./test_ex1.jpg)
+
+More datas Better result.
