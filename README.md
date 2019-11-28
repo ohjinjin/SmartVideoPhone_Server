@@ -1,7 +1,7 @@
 # SmartVideoPhone_Server
 This Project's name is a SmartVideoPhone for Women
 
-The server recognizes the face using the Harr Cascade algorithm with OpenCV.
+The server detects and recognizes the face using the Harr Cascade algorithm with OpenCV.
 
 ## collect datas for training
 We can get 30 images for training like following image after executing **collect_datas.py**
