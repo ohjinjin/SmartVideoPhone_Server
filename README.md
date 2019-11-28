@@ -5,7 +5,7 @@ SmartVideoPhone for Women
 We can get 30 images for training like following image after executing **collect_datas.py**
 
 
-![ex_captureImage](./collecting_ex1.png)
+![ex_captureImage](./collecting_ex1.PNG)
 
 
 collect training datas by detecting only the face part while shooting like this :
