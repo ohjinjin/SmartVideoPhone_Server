@@ -29,3 +29,13 @@ We can see the face recoginition works well.
 More datas Better result.
 
 Using this, the whole project will identify whether the guest who visited my house is a stranger or a courier and notify to Android Application.
+
+
+
+## implement tcp/ip socket for network between Android and Server
+The SmartVideoPhone project has three module, Server, Android and H/W on RaspberryPi.
+The Android part requires two sockets. One of them is for raspberrypi and The other is for Server.
+So We need to implement TCP/IP server socket and client socket in server program.
+Here's the server program, **recog_text.py**.
+
+This server program and Android programming enable face recognition asynchronously.
