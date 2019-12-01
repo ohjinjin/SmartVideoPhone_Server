@@ -37,19 +37,21 @@ class ClientThread(threading.Thread):
                 names = ['None', 'ohjinjin']
 
                 # Initialize and start realtime video capture
-                cam = cv2.VideoCapture(0)
-                #cap = cv2.VideoCapture("192.168.219.ddd")
-                cam.set(3, 640) # set video widht
-                cam.set(4, 480) # set video height
+                #cam = cv2.VideoCapture(0)
+                cap = cv2.VideoCapture("http://192.168.219.104:8090/?action=stream")
+                    
+                cap.set(3, 640) # set video widht
+                cap.set(4, 480) # set video height
 
                 # Define min window size to be recognized as a face
-                minW = 0.1*cam.get(3)
-                minH = 0.1*cam.get(4)
+                minW = 0.1*cap.get(3)
+                minH = 0.1*cap.get(4)
 
                 boool = False
                 path = 0
                 while True:
-                    ret, img =cam.read()
+                    #ret, img =cam.read()
+                    ret, img = cap.read()
                     
                     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
                     
@@ -89,7 +91,7 @@ class ClientThread(threading.Thread):
                     path += 1
                 # Do a bit of cleanup
                 print("\n [INFO] Exiting Program and cleanup stuff")
-                cam.release()
+                cap.release()
                 cv2.destroyAllWindows()
             time.sleep(5)
 
