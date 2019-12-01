@@ -6,7 +6,7 @@ import time
 
 ## tcp/ip 소켓 생성
 # 접속할 서버 주소
-HOST ='127.0.0.1'
+HOST ='192.168.219.106'
 #'192.168.0.26'
 # 클라이언트 접속을 대기하는 포트 번호
 PORT = 8080
@@ -30,8 +30,9 @@ clientSock, addr = serverSock.accept()
 print("Connected by", addr)
 
 # 라즈파이별로 스레드 굴려주고
-
-if (clientSock.recv(1024).decode() == "recognize"):
+tmp = clientSock.recv(1024).decode()
+print(tmp+"dddd")
+if (tmp == "recognize"):
     # 인식하라고 메시지가 오면 mjpgstreamer에서 스냅샷을 가지고 face recognition을 진행
     # recognition 결과를 반환받아 tcp/ip 송신하도록 바꾸기
 
@@ -79,7 +80,8 @@ if (clientSock.recv(1024).decode() == "recognize"):
                 boool = True
                 id = names[id]
                 confidence = "  {0}%".format(round(100 - confidence))
-                clientSock.sendall("True".encode())
+                clientSock.sendall("True\n".encode())
+                print("cheche")
             else:
                 id = "unknown"
                 confidence = "  {0}%".format(round(100 - confidence))
@@ -91,7 +93,7 @@ if (clientSock.recv(1024).decode() == "recognize"):
         #k = cv2.waitKey(10) & 0xff # Press 'ESC' for exiting video
         if boool or path>100:
             if not boool:
-                clientSock.sendall("False".encode())
+                clientSock.sendall("False\n".encode())
                 #break
             #else:
             #    clientSock.sendall("False".encode())
