@@ -3,7 +3,14 @@ import numpy as np
 import os
 import socket
 import time
+from datetime import datetime
 import threading
+import urllib.request
+import pymysql.cursors
+
+# DB 핸들 미리 해두기
+#conn = pymysql.connect(host='192.168.0.111', user='%', password='',db='smartvideophone',charset='utf8mb4')
+conn = pymysql.connect(host='192.168.219.107', user='%', password='',db='smartvideophone',charset='utf8mb4')
 
 # 클라이언트 별 스레드
 class ClientThread(threading.Thread):
@@ -17,92 +24,113 @@ class ClientThread(threading.Thread):
 
     def run(self):    
         print ("Connection from : "+ip+":"+str(port))
-        while True:
-            tmp = clientSock.recv(1024).decode()
-            #print(tmp+",client said.")
-            if (tmp != "") and (tmp == "recognize"):
-                # 인식하라고 메시지가 오면 mjpgstreamer에서 스냅샷을 가지고 face recognition을 진행
-                # recognition 결과를 반환받아 tcp/ip 송신하도록 바꾸기
-                recognizer = cv2.face.LBPHFaceRecognizer_create()
-                recognizer.read('trainer.yml')
-                cascadePath = "haarcascades/haarcascade_frontalface_default.xml"
-                faceCascade = cv2.CascadeClassifier(cascadePath);
-                font = cv2.FONT_HERSHEY_SIMPLEX
+        #if (ip=="192.168.0.110"):
+        if (ip=="192.168.219.104"):
+            while True:
+                tmp = clientSock.recv(1024).decode()
+                print(tmp)
+                if (tmp != "") and (tmp == "triggered"):
+                    currTime = datetime.today().strftime("%Y%m%d%H%M")
+                    destPath = currTime + ".jpg"
+                    print(currTime+"cccc")
+                    #urllib.request.urlretrieve("http://192.168.0.110:8090/?action=snapshot","C:\\xampp\\htdocs\\" + destPath)
+                    urllib.request.urlretrieve("http://192.168.219.104:8090/?action=snapshot","C:\\xampp\\htdocs\\" + destPath)
+                    #try:
+                    with conn.cursor() as cursor:
+                        sql='INSERT INTO visit_log (image) VALUES (%s)'
+                        cursor.execute(sql, (destPath,))
+                    conn.commit()
+                    print(cursor.lastrowid)
+            print("조기연결해제")
+        else:
+            while True:
+                tmp = clientSock.recv(1024).decode()
+                print(tmp+",client said.")
+                if (tmp != "") and (tmp == "recognize"):
+                    # 인식하라고 메시지가 오면 mjpgstreamer에서 스냅샷을 가지고 face recognition을 진행
+                    # recognition 결과를 반환받아 tcp/ip 송신하도록 바꾸기
+                    recognizer = cv2.face.LBPHFaceRecognizer_create()
+                    recognizer.read('trainer.yml')
+                    cascadePath = "haarcascades/haarcascade_frontalface_default.xml"
+                    faceCascade = cv2.CascadeClassifier(cascadePath);
+                    font = cv2.FONT_HERSHEY_SIMPLEX
 
-                #iniciate id counter
-                id = 0
+                    #iniciate id counter
+                    id = 0
 
-                # names related to ids: example ==> loze: id=1,  etc
-                # 이런식으로 사용자의 이름을 사용자 수만큼 추가해준다.
-                names = ['None', 'ohjinjin']
+                    # names related to ids: example ==> loze: id=1,  etc
+                    # 이런식으로 사용자의 이름을 사용자 수만큼 추가해준다.
+                    names = ['None', 'ohjinjin']
 
-                # Initialize and start realtime video capture
-                #cam = cv2.VideoCapture(0)
-                cap = cv2.VideoCapture("http://192.168.219.104:8090/?action=stream")
-                    
-                cap.set(3, 640) # set video widht
-                cap.set(4, 480) # set video height
-
-                # Define min window size to be recognized as a face
-                minW = 0.1*cap.get(3)
-                minH = 0.1*cap.get(4)
-
-                boool = False
-                path = 0
-                while True:
-                    #ret, img =cam.read()
-                    ret, img = cap.read()
-                    
-                    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-                    
-                    faces = faceCascade.detectMultiScale( 
-                        gray,
-                        scaleFactor = 1.2,
-                        minNeighbors = 5,
-                        minSize = (int(minW), int(minH)),
-                       )
-
-                    for(x,y,w,h) in faces:
-                        cv2.rectangle(img, (x,y), (x+w,y+h), (0,255,0), 2)
-                        id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
-                        # Check if confidence is less them 100 ==> "0" is perfect match
-                        if (confidence < 100):
-                            boool = True
-                            id = names[id]
-                            confidence = "  {0}%".format(round(100 - confidence))
-                            clientSock.sendall("True\n".encode())
-                            print("cheche")
-                        else:
-                            id = "unknown"
-                            confidence = "  {0}%".format(round(100 - confidence))
+                    # Initialize and start realtime video capture
+                    #cam = cv2.VideoCapture(0)
+                    cap = cv2.VideoCapture("http://192.168.219.104:8090/?action=stream")
                         
-                        cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2)
-                        cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  
-                    
-                    cv2.imshow('camera',img) 
-                    #k = cv2.waitKey(10) & 0xff # Press 'ESC' for exiting video
-                    if boool or path>100:
-                        if not boool:
-                            clientSock.sendall("False\n".encode())
-                            #break
-                        boool = False
-                        break
-                    
-                    path += 1
-                # Do a bit of cleanup
-                print("\n [INFO] Exiting Program and cleanup stuff")
-                cap.release()
-                cv2.destroyAllWindows()
-            time.sleep(5)
+                    cap.set(3, 640) # set video widht
+                    cap.set(4, 480) # set video height
+
+                    # Define min window size to be recognized as a face
+                    minW = 0.1*cap.get(3)
+                    minH = 0.1*cap.get(4)
+
+                    boool = False
+                    path = 0
+                    while True:
+                        #ret, img =cam.read()
+                        ret, img = cap.read()
+                        
+                        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+                        
+                        faces = faceCascade.detectMultiScale( 
+                            gray,
+                            scaleFactor = 1.2,
+                            minNeighbors = 5,
+                            minSize = (int(minW), int(minH)),
+                           )
+
+                        for(x,y,w,h) in faces:
+                            cv2.rectangle(img, (x,y), (x+w,y+h), (0,255,0), 2)
+                            id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
+                            # Check if confidence is less them 100 ==> "0" is perfect match
+                            if (confidence < 100):
+                                boool = True
+                                id = names[id]
+                                confidence = "  {0}%".format(round(100 - confidence))
+                                clientSock.sendall("True\n".encode())
+                                print("cheche")
+                            else:
+                                id = "unknown"
+                                confidence = "  {0}%".format(round(100 - confidence))
+                            
+                            cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2)
+                            cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  
+                        
+                        cv2.imshow('camera',img) 
+                        #k = cv2.waitKey(10) & 0xff # Press 'ESC' for exiting video
+                        if boool or path>50:
+                            if not boool:
+                                clientSock.sendall("False\n".encode())
+                                #break
+                            boool = False
+                            break
+                        
+                        path += 1
+                        #print(path)
+                    # Do a bit of cleanup
+                    #print("\n [INFO] Exiting Program and cleanup stuff")
+                    cap.release()
+                    cv2.destroyAllWindows()
+                time.sleep(5)
 
         
         
 ## tcp/ip 소켓 생성
 # 접속할 서버 주소
-HOST ='192.168.219.106' # or loopback addr
+#HOST ='192.168.0.111' # or loopback addr
+HOST ='192.168.219.107' # or loopback addr
 
 # 클라이언트 접속을 대기하는 포트 번호
-PORT = 8080
+PORT = 8000
 
 # 주소 체계로 IPv4, 소켓 타입으로 TCP 사용
 serverSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -126,4 +154,3 @@ while True:
     newthread.start()
     threads.append(newthread)
     print("\n클라이언트 수: "+str(len(threads)))
-
