@@ -41,6 +41,6 @@ Here's the server program, **recog_text.py**.
 This server program and Android programming enable face recognition asynchronously.
 
 ## references
- post of own blog URL : [https://ohjinjin.github.io/projects/SmartVideoPhone/](https://ohjinjin.github.io/projects/SmartVideoPhone/)
- video of execute URL : [https://youtu.be/wLMCrnUK-1c](https://youtu.be/wLMCrnUK-1c)
+ post of own blog URL : [https://ohjinjin.github.io/projects/SmartVideoPhone/](https://ohjinjin.github.io/projects/SmartVideoPhone/)<br/>
+ video of execute URL : [https://youtu.be/wLMCrnUK-1c](https://youtu.be/wLMCrnUK-1c)<br/>
  
