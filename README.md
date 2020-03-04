@@ -43,4 +43,5 @@ This server program and Android programming enable face recognition asynchronous
 ## references
  post of own blog URL : [https://ohjinjin.github.io/projects/SmartVideoPhone/](https://ohjinjin.github.io/projects/SmartVideoPhone/)<br/>
  video of execute URL : [https://youtu.be/wLMCrnUK-1c](https://youtu.be/wLMCrnUK-1c)<br/>
- 
+ git repo_Android URL : [https://github.com/ohjinjin/SmartVideoPhone_Android](https://github.com/ohjinjin/SmartVideoPhone_Android)
+ git repo_HW URL : [https://github.com/ohjinjin/SmartVideoPhone_HW](https://github.com/ohjinjin/SmartVideoPhone_HW)
